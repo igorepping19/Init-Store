@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Init Store</title>
+    <link rel="icon" type="icon" href="icon.png">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="cabecalho">
+                <h1>Init Store</h1>
+            </div>
+            <nav class="menu">
+                <ul>
+                    <a href="produtos.html">Produtos</a>
+                    <select id="select-categorias" onchange="redirecionarCategoria(this.value)">
+                        <option value="">Categorias</option> 
+                        <option value="categorias/notebooks.html">Notebooks</option>
+                        <option value="categorias/monitores.html">Monitores</option>
+                        <option value="categorias/teclados.html">Teclados</option>
+                        <option value="categorias/mouses.html">Mouses</option>
+                        <option value="categorias/perifericos.html">Outros Periféricos</option>                
+                    </select>                    
+                    <a href="famosos.html">Mais Vendidos</a>
+                </ul>
+            </nav>
+            <form action="" method="get" target="_blank">
+                <input type="text" name="q" placeholder="Buscar Produto..." required>
+            </form>
+            <nav class="carrinho">
+                <a href="carrinho.html">
+                    <img src="carrinho.png" alt="Meu Carrinho" style="width: 30px; height: 30px;">
+                </a>
+            </nav>
+            <nav class="conta">
+                <a href="conta.html">
+                    <img src="user.png" alt="Minha Conta" style="width: 30px; height: 30px;">
+                </a>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <div class="container">
+            <div class="apresentacao">
+                <div class="paragrafo">
+                    <h2>Init Store!!! A sua loja de Tecnologia.</h2>
+                    <p>Encontre os melhores notebooks, desktops, periféricos e componentes com preços imbatíveis e entrega rápida.</p>
+                </div>
+                <img src="desktop.jpg" alt="Imagem Desktop">
+            </div>
+            <div class="destaques">
+                <h3>Produtos em Destaque</h3>
+                <div class="cards">
+                    <div class="notebook">
+                        <div class="card-image">
+                            <img src="noteb.png" alt="Notebook Gamer RTX 4060">
+                        </div>        
+                        <div class="card-content">
+                            <h2 class="product-title">Notebook Gamer RTX 4070</h2>
+                            <p class="product-specs">Intel Core i7, 16GB RAM, RTX 4070, 512GB SSD</p>
+                            <p class="product-price">R$ 5.499,99</p>
+                            <button class="add-to-cart-btn">
+                                Adicionar ao Carrinho
+                            </button>
+                        </div>
+                    </div>
+                    <div class="monitor 1">
+                        <div class="card-image">
+                            <img src="monitor1.png" alt="Monitor 27 polegadas curvo">
+                        </div>        
+                        <div class="card-content">
+                            <h2 class="product-title">Monitor 27 polegadas curvo</h2>
+                            <p class="product-specs">Concórdia, 27 polegadas, curvo, 200Hz</p>
+                            <p class="product-price">R$ 1.099,98</p>
+                            <button class="add-to-cart-btn">
+                                Adicionar ao Carrinho
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <div class="container">
+            <div class="rodape">
+                <div class="contatos">
+                    <h4>Entre em Contato</h4>
+                    <p>Email: intstore@gmail.com</p>
+                </div>
+                <div class="direitos">
+                    <p>&copy; 2024 Igor Epping. Todos os direitos reservados.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>
