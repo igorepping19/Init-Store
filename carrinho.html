@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Carrinho - Init Store</title>
+    <link rel="icon" type="icon" href="icon.png">
+    <!-- Reutilizamos o CSS principal para manter a consistência visual -->
+    <link rel="stylesheet" href="style.css"> 
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="cabecalho">
+                <h1>Init Store</h1>
+                <nav class="menu">
+                    <ul>
+                        <a href="index.html">Início</a>
+                        <a href="produtos.html">Produtos</a>
+                    </ul>
+                </nav>
+                <form action="" method="get" target="_blank">
+                    <input type="text" name="q" placeholder="Buscar Produto..." required>
+                </form>
+                <nav class="carrinho">
+                    <a href="carrinho.html">
+                        <img src="carrinho.png" alt="Meu Carrinho" style="width: 30px; height: 30px;">
+                        <span id="carrinho-contador" style="display: none;">0</span>
+                    </a>
+                </nav>
+                <nav class="conta">
+                    <a href="conta.html">
+                        <img src="user.png" alt="Minha Conta" style="width: 30px; height: 30px;">
+                    </a>
+                </nav>
+            </div>   
+        </div>
+    </header>
+    <main>
+        <div class="container carrinho-content">
+            <h2 class="carrinho-title">Seu Carrinho de Compras</h2>
+            <div class="carrinho-grid">
+                <div class="lista-itens" id="lista-itens-carrinho">
+                    <p style="text-align: center;">Carregando itens do carrinho...</p>
+                </div>
+
+                <div class="resumo-pedido">
+                    <h4>Resumo do Pedido</h4>
+                    <div class="resumo-linha">
+                        <span>Subtotal:</span>
+                        <span id="carrinho-subtotal">R$ 0,00</span>
+                    </div>
+                    <div class="resumo-linha">
+                        <span>Frete:</span>
+                        <span id="carrinho-frete">Grátis</span>
+                    </div>
+                    <hr style="margin: 15px 0;">
+                    <div class="resumo-linha">
+                        <strong>Total:</strong>
+                        <strong id="carrinho-total">R$ 0,00</strong>
+                    </div>
+                    
+                    <button class="btn-finalizar">Finalizar Compra</button>
+                    <button class="btn-remover" style="width: 100%; margin-top: 10px;" onclick="esvaziarCarrinho()">Esvaziar Carrinho</button>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <div class="container">
+            <div class="rodape">
+                <div class="contatos">
+                    <h4>Entre em Contato</h4>
+                    <p>Email: intstore@gmail.com</p>
+                </div>
+                <div class="direitos">
+                    <p>&copy; 2024 Igor Epping. Todos os direitos reservados.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="carrinho.js"></script> 
+
+</body>
+</html>
