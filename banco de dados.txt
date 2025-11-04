@@ -84,28 +84,19 @@ INSERT INTO categorias (nome, slug) VALUES
 ('Monitores', 'monitores'),
 ('Teclados', 'teclados'),
 ('Mouses', 'mouses'),
-adicionei fonte, placa de vídeo, placa mae, memoria ram e ssd.
-
-(Fontes
-Memoria Ram
-Monitores
-Mouses
-Notebooks
-Placa Mãe
-Placas de video
-Ssd
-Teclados)
-
-
-
-
-
-
-
-
+('Fonte', 'fonte'),
+('Placa de Video', 'placa de video'),
+('Placa Mãe', 'placa mãe'),
+('Memoria Ram', 'memoria ram'),
+('Ssd', 'ssd');
 
 -- Associe os produtos existentes às categorias
 UPDATE produtos SET categoria_id = 1 WHERE nome LIKE '%Notebook%';
 UPDATE produtos SET categoria_id = 2 WHERE nome LIKE '%Monitor%';
 UPDATE produtos SET categoria_id = 3 WHERE nome LIKE '%Teclado%';
 UPDATE produtos SET categoria_id = 4 WHERE nome LIKE '%Mouse%';
+
+
+SET SQL_SAFE_UPDATES = 0;
+UPDATE categorias SET slug = REPLACE(LOWER(nome), ' ', '_');
+SET SQL_SAFE_UPDATES = 1;

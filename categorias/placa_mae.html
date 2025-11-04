@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Placa Mãe - Init Store</title>
+  <link rel="icon" type="image/x-icon" href="icon.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- HEADER (igual ao index.html) -->
+  <header>
+    <div class="container">
+      <div class="cabecalho">
+        <h1>Init Store</h1>
+        <nav class="menu">
+          <ul>
+            <a href="index.html">Início</a>
+            <a href="produtos.html">Produtos</a>
+            <select id="select-categorias" onchange="redirecionarCategoria(this.value)">
+              <option value="">Categorias</option>
+            </select>
+            <a href="famosos.html">Mais Vendidos</a>
+          </ul>
+        </nav>
+        <form action="" method="get">
+          <input type="text" name="q" placeholder="Buscar Produto..." required>
+        </form>
+        <nav class="carrinho">
+          <a href="carrinho.html">
+            <img src="carrinho.png" alt="Carrinho" style="width: 30px;">
+          </a>
+        </nav>
+        <nav class="conta">
+          <a href="conta.html">
+            <img src="user.png" alt="Conta" style="width: 30px;">
+          </a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <footer>
+    <div class="container">
+      <div class="rodape">
+        <div class="contatos">
+          <h4>Entre em Contato</h4>
+          <p>Email: intstore@gmail.com</p>
+        </div>
+        <div class="direitos">
+          <p>© 2025 Igor Epping. Todos os direitos reservados.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="script.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Carrega categorias no <select>
+      carregarCategorias();
+
+      // 2. Carrega produtos da categoria "notebooks"
+      fetch('http://localhost:8000/api_produtos.php?categoria=notebooks')
+        .then(r => r.json())
+        .then(data => {
+          const container = document.getElementById('lista-produtos');
+          if (data.status !== 'sucesso' || !data.dados.length) {
+            container.innerHTML = '<p>Nenhum produto encontrado.</p>';
+            return;
+          }
+
+          container.innerHTML = data.dados.map(p => `
+            <div class="placaMae">
+              <div class="card-image">
+                <img src="${p.imagem_url || 'https://placehold.co/300x200'}" 
+                     alt="${p.nome}" 
+                     onerror="this.src='https://placehold.co/300x200?text=Sem+Imagem'">
+              </div>
+              <div class="card-content">
+                <h2 class="product-title">${p.nome}</h2>
+                <p class="product-price">R$ ${parseFloat(p.preco).toFixed(2).replace('.', ',')}</p>
+                <button class="add-to-cart-btn" onclick="adicionarAoCarrinho(${p.id})">
+                  Adicionar ao Carrinho
+                </button>
+              </div>
+            </div>
+          `).join('');
+        })
+        .catch(() => {
+          document.getElementById('lista-produtos').innerHTML = '<p>Erro ao carregar produtos.</p>';
+        });
+    });
+  </script>
+</body>
+</html>
