@@ -1,35 +1,58 @@
-// script.js – Funções globais: redirecionar + carregar categorias
-const API_CATEGORIAS = 'http://localhost:8000/api_categorias.php';
-
-// 1. Redireciona para categoria
+// Redireciona ao mudar categoria
 function redirecionarCategoria(url) {
-    if (url) window.location.href = url;
+    if (url) {
+        window.location.href = url;
+    }
 }
 
-// 2. Carrega categorias dinamicamente no <select>
+// Carrega categorias no <select>
 function carregarCategorias() {
     const select = document.getElementById('select-categorias');
-    if (!select) return;
+    if (!select) {
+        console.log('select-categorias não encontrado na página');
+        return;
+    }
 
-    fetch(API_CATEGORIAS)
+    // Limpa tudo
+    select.innerHTML = '<option value="">Carregando...</option>';
+
+    fetch('http://localhost:8000/api_categorias.php')
         .then(r => r.json())
         .then(data => {
-            if (data.status !== 'sucesso') return;
+            if (data.status !== 'sucesso' || !data.dados) {
+                select.innerHTML = '<option value="">Erro</option>';
+                return;
+            }
 
-            // Limpa opções (exceto a primeira)
+            // Limpa e adiciona padrão
             select.innerHTML = '<option value="">Categorias</option>';
 
+            // Adiciona opções
             data.dados.forEach(cat => {
                 const opt = document.createElement('option');
-                opt.value = `categorias/${cat.slug}.html`;
+                opt.value = `/categorias/${cat.slug}.html`;
                 opt.textContent = cat.nome;
                 select.appendChild(opt);
             });
+
+            // Marca a categoria atual
+            const currentFile = window.location.pathname.split('/').pop();
+            const currentSlug = currentFile.replace('.html', '');
+            const currentOption = Array.from(select.options).find(opt => 
+                opt.value.includes(currentSlug)
+            );
+            if (currentOption) {
+                currentOption.selected = true;
+            }
         })
-        .catch(() => {
-            select.innerHTML += '<option value="">Erro ao carregar</option>';
+        .catch(err => {
+            console.error('Erro ao carregar categorias:', err);
+            select.innerHTML = '<option value="">Erro</option>';
         });
 }
 
-// 3. Executa ao carregar a página
-document.addEventListener('DOMContentLoaded', carregarCategorias);
+// Executa ao carregar a página
+document.addEventListener('DOMContentLoaded', () => {
+    carregarCategorias();
+    console.log('carregarCategorias() executado');
+});
