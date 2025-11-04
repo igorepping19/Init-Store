@@ -12,27 +12,34 @@
         <div class="container">
             <div class="cabecalho">
                 <h1>Init Store</h1>
+                <nav class="menu">
+                    <ul>
+                        <a href="index.html">Inicio</a>
+                        <a href="produtos.html">Produtos</a>
+                        <select id="select-categorias" onchange="redirecionarCategoria(this.value)">
+                            <option value="">Categorias</option> 
+                            <option value="categorias/notebooks.html">Notebooks</option>
+                            <option value="categorias/monitores.html">Monitores</option>
+                            <option value="categorias/teclados.html">Teclados</option>
+                            <option value="categorias/mouses.html">Mouses</option>
+                            <option value="categorias/perifericos.html">Outros Periféricos</option>                
+                        </select>
+                    </ul>
+                </nav>
+                <form action="" method="get" target="_blank">
+                    <input type="text" name="q" placeholder="Buscar Produto..." required>
+                </form>
+                <nav class="carrinho">
+                    <a href="carrinho.html">
+                        <img src="carrinho.png" alt="Meu Carrinho" style="width: 30px; height: 30px;">
+                    </a>
+                </nav>
+                <nav class="conta">
+                    <a href="conta.html">
+                        <img src="user.png" alt="Minha Conta" style="width: 30px; height: 30px;">
+                    </a>
+                </nav>
             </div>
-            <nav class="menu">
-                <ul>
-                    <a href="produtos.html">Produtos</a>
-                    <a href="categorias.html">Categorias</a>
-                    <a href="famosos.html">Mais Vendidos</a>
-                </ul>
-            </nav>
-            <form action="" method="get" target="_blank">
-                <input type="text" name="q" placeholder="Buscar Produto..." required>
-            </form>
-            <nav class="carrinho">
-                <a href="carrinho.html">
-                    <img src="carrinho.png" alt="Meu Carrinho" style="width: 30px; height: 30px;">
-                </a>
-            </nav>
-            <nav class="conta">
-                <a href="conta.html">
-                    <img src="user.png" alt="Minha Conta" style="width: 30px; height: 30px;">
-                </a>
-            </nav>
         </div>
     </header>
     <main>
