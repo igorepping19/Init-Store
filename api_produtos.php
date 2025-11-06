@@ -1,53 +1,26 @@
 <?php
-// 1. Inclui o arquivo de conexão
-require_once 'configDB.php';
+header("Content-Type: application/json");
+header("Access-Control-Allow-Origin: *");
 
-// 2. Define o cabeçalho para JSON e CORS
-header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: http://localhost:8000'); // Ajuste em produção
+require_once 'db.php';
 
-// 3. Verifica o método HTTP
-$method = $_SERVER['REQUEST_METHOD'];
+$sql = "SELECT id, nome, preco, imagem_url, categoria_slug, destaque FROM produtos WHERE 1=1";
+$params = [];
 
-if ($method === 'GET') {
-    try {
-        $categoria_slug = $_GET['categoria'] ?? null;
-
-        $sql = "SELECT p.id, p.nome, p.preco, p.imagem_url, c.slug as categoria_slug 
-                FROM produtos p 
-                LEFT JOIN categorias c ON p.categoria_id = c.id 
-                WHERE p.estoque > 0";
-
-        if ($categoria_slug) {
-            $sql .= " AND c.slug = ?";
-            $stmt = $pdo->prepare($sql);
-            $stmt->execute([$categoria_slug]);
-        } else {
-            $sql .= " ORDER BY p.nome ASC";
-            $stmt = $pdo->prepare($sql);
-            $stmt->execute();
-        }
-
-        $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        echo json_encode([
-            'status' => 'sucesso',
-            'dados' => $produtos
-        ]);
-
-    } catch (PDOException $e) {
-        http_response_code(500);
-        echo json_encode([
-            'status' => 'erro',
-            'mensagem' => 'Erro ao buscar produtos: ' . $e->getMessage()
-        ]);
-    }
-
-} else {
-    http_response_code(405);
-    echo json_encode([
-        'status' => 'erro',
-        'mensagem' => 'Método não permitido. Use GET.'
-    ]);
+if (isset($_GET['destaque'])) {
+    $sql .= " AND destaque = 1";
 }
+if (isset($_GET['categoria'])) {
+    $sql .= " AND categoria_slug = ?";
+    $params[] = $_GET['categoria'];
+}
+
+$sql .= " ORDER BY id DESC";
+
+$stmt = $pdo->prepare($sql);
+$stmt->execute($params);
+$produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// ALTERAÇÃO AQUI: envolver em 'dados'
+echo json_encode(['dados' => $produtos]);
 ?>

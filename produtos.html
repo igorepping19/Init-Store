@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>                                                                                      
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Init Store</title>
-    <link rel="icon" type="icon" href="icon.png">
+    <title>Todos os Produtos - Init Store</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -16,12 +15,12 @@
                     <ul>
                         <a href="index.html">Inicio</a>
                         <select id="select-categorias" onchange="redirecionarCategoria(this.value)">
-                            <option value="">Categorias</option>
-                        </select>
+                            <option value="">Carregando...</option>
+                        </select>                    
                         <a href="famosos.html">Mais Vendidos</a>
                     </ul>
                 </nav>
-                <form action="" method="get" target="_blank">
+                <form action="buscar.html" method="get">
                     <input type="text" name="q" placeholder="Buscar Produto..." required>
                 </form>
                 <nav class="carrinho">
@@ -37,48 +36,21 @@
             </div>
         </div>
     </header>
-    <main>
-        <div class="container">
-            <div class="apresentacao">
-                <div class="paragrafo">
-                    <h2>Init Store!!! A sua loja de Tecnologia.</h2>
-                    <p>Encontre os melhores notebooks, desktops, periféricos e componentes com preços imbatíveis e entrega rápida.</p>
-                </div>
-                <img src="desktop.jpg" alt="Imagem Desktop">
-            </div>
-            <div class="destaques">
-                <h3>Produtos em Destaque</h3>
-                <div class="cards">
-                    <div class="notebook">
-                        <div class="card-image">
-                            <img src="noteb.png" alt="Notebook Gamer RTX 4060">
-                        </div>        
-                        <div class="card-content">
-                            <h2 class="product-title">Notebook Gamer RTX 4070</h2>
-                            <p class="product-specs">Intel Core i7, 16GB RAM, RTX 4070, 512GB SSD</p>
-                            <p class="product-price">R$ 5.499,99</p>
-                            <button class="add-to-cart-btn">
-                                Adicionar ao Carrinho
-                            </button>
-                        </div>
-                    </div>
-                    <div class="monitor 1">
-                        <div class="card-image">
-                            <img src="monitor1.png" alt="Monitor 27 polegadas curvo">
-                        </div>        
-                        <div class="card-content">
-                            <h2 class="product-title">Monitor 27 polegadas curvo</h2>
-                            <p class="product-specs">Concórdia, 27 polegadas, curvo, 200Hz</p>
-                            <p class="product-price">R$ 1.099,98</p>
-                            <button class="add-to-cart-btn">
-                                Adicionar ao Carrinho
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <main class="container">
+        <h2>Todos os Produtos</h2>
+
+        <div style="margin:20px 0; display:flex; gap:10px; flex-wrap:wrap;">
+            <input type="text" id="busca" placeholder="Buscar produto..." style="padding:10px; flex:1; min-width:200px;">
+            <button onclick="filtrarProdutos()" style="padding:10px 20px; background:#007bff; color:white; border:none; border-radius:5px;">
+                Buscar
+            </button>
+        </div>
+
+        <div id="lista-produtos" class="cards">
+            Carregando produtos...
         </div>
     </main>
+
     <footer>
         <div class="container">
             <div class="rodape">
@@ -87,11 +59,94 @@
                     <p>Email: intstore@gmail.com</p>
                 </div>
                 <div class="direitos">
-                    <p>&copy; 2024 Igor Epping. Todos os direitos reservados.</p>
+                    <p>&copy; 2025 Igor Epping. Todos os direitos reservados.</p>
                 </div>
             </div>
         </div>
     </footer>
 
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            carregarCategorias();
+            carregarTodosProdutos();
+        });
+
+        function carregarTodosProdutos() {
+            const url = 'http://localhost:8000/api_produtos.php';
+            fetch(url)
+                .then(r => r.json())
+                .then(data => {
+                    const container = document.getElementById('lista-produtos');
+                    if (!data.dados || data.dados.length === 0) {
+                        container.innerHTML = '<p style="text-align:center; color:#666;">Nenhum produto encontrado.</p>';
+                        return;
+                    }
+
+                    container.innerHTML = data.dados.map(p => `
+                        <div class="notebook">
+                            <div class="card-image">
+                                <img src="${p.imagem_url || 'https://placehold.co/300x200'}" 
+                                     alt="${p.nome}" 
+                                     onerror="this.src='https://placehold.co/300x200?text=Sem+Imagem'">
+                            </div>
+                            <div class="card-content">
+                                <h2 class="product-title">${p.nome}</h2>
+                                <p class="product-specs">${p.descricao || ''}</p>
+                                <p class="product-price">R$ ${parseFloat(p.preco).toFixed(2).replace('.', ',')}</p>
+                                <button class="add-to-cart-btn" onclick="adicionarAoCarrinho(${p.id})">
+                                    Adicionar ao Carrinho
+                                </button>
+                            </div>
+                        </div>
+                    `).join('');
+                })
+                .catch(() => {
+                    document.getElementById('lista-produtos').innerHTML = '<p style="color:red;">Erro ao carregar produtos.</p>';
+                });
+        }
+
+        function filtrarProdutos() {
+            const termo = document.getElementById('busca').value.trim();
+            if (!termo) {
+                carregarTodosProdutos();
+                return;
+            }
+
+            fetch(`http://localhost:8000/api_produtos.php`)
+                .then(r => r.json())
+                .then(data => {
+                    const filtrados = data.dados.filter(p => 
+                        p.nome.toLowerCase().includes(termo.toLowerCase())
+                    );
+
+                    const container = document.getElementById('lista-produtos');
+                    if (filtrados.length === 0) {
+                        container.innerHTML = '<p style="text-align:center; color:#666;">Nenhum produto encontrado.</p>';
+                        return;
+                    }
+
+                    container.innerHTML = filtrados.map(p => `
+                        <div class="notebook">
+                            <div class="card-image">
+                                <img src="${p.imagem_url || 'https://placehold.co/300x200'}" alt="${p.nome}">
+                            </div>
+                            <div class="card-content">
+                                <h2 class="product-title">${p.nome}</h2>
+                                <p class="product-price">R$ ${parseFloat(p.preco).toFixed(2).replace('.', ',')}</p>
+                                <button class="add-to-cart-btn" onclick="adicionarAoCarrinho(${p.id})">
+                                    Adicionar
+                                </button>
+                            </div>
+                        </div>
+                    `).join('');
+                });
+        }
+
+        // Busca ao pressionar Enter
+        document.getElementById('busca').addEventListener('keypress', e => {
+            if (e.key === 'Enter') filtrarProdutos();
+        });
+    </script>
 </body>
 </html>

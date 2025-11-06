@@ -1,58 +1,81 @@
-// Redireciona ao mudar categoria
-function redirecionarCategoria(url) {
-    if (url) {
-        window.location.href = url;
-    }
-}
+// script.js
+async function carregarProdutos(filtro = {}) {
+    let url = 'api_produtos.php';
+    const params = new URLSearchParams(filtro);
+    if (params.toString()) url += '?' + params;
 
-// Carrega categorias no <select>
-function carregarCategorias() {
-    const select = document.getElementById('select-categorias');
-    if (!select) {
-        console.log('select-categorias não encontrado na página');
-        return;
-    }
+    try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('Erro na API');
+        const data = await res.json(); // AGORA TEM 'dados'
 
-    // Limpa tudo
-    select.innerHTML = '<option value="">Carregando...</option>';
+        const container = document.getElementById('produtos-container');
+        if (!container) return;
 
-    fetch('http://localhost:8000/api_categorias.php')
-        .then(r => r.json())
-        .then(data => {
-            if (data.status !== 'sucesso' || !data.dados) {
-                select.innerHTML = '<option value="">Erro</option>';
-                return;
-            }
+        container.innerHTML = '';
 
-            // Limpa e adiciona padrão
-            select.innerHTML = '<option value="">Categorias</option>';
+        if (!data.dados || data.dados.length === 0) {
+            container.innerHTML = '<p class="text-center text-muted">Nenhum produto encontrado.</p>';
+            return;
+        }
 
-            // Adiciona opções
-            data.dados.forEach(cat => {
-                const opt = document.createElement('option');
-                opt.value = `/categorias/${cat.slug}.html`;
-                opt.textContent = cat.nome;
-                select.appendChild(opt);
-            });
-
-            // Marca a categoria atual
-            const currentFile = window.location.pathname.split('/').pop();
-            const currentSlug = currentFile.replace('.html', '');
-            const currentOption = Array.from(select.options).find(opt => 
-                opt.value.includes(currentSlug)
-            );
-            if (currentOption) {
-                currentOption.selected = true;
-            }
-        })
-        .catch(err => {
-            console.error('Erro ao carregar categorias:', err);
-            select.innerHTML = '<option value="">Erro</option>';
+        data.dados.forEach(p => {
+            const card = `
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <img src="${p.imagem_url || 'placeholder.jpg'}" class="card-img-top" alt="${p.nome}" style="height: 200px; object-fit: cover;">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">${p.nome}</h5>
+                            <p class="card-text text-success fw-bold">R$ ${parseFloat(p.preco).toFixed(2).replace('.', ',')}</p>
+                            ${p.destaque == 1 ? '<span class="badge bg-danger mb-2">DESTAQUE</span>' : ''}
+                            <button class="btn btn-primary mt-auto" onclick="alert('Adicionado!')">
+                                Adicionar ao Carrinho
+                            </button>
+                        </div>
+                    </div>
+                </div>`;
+            container.innerHTML += card;
         });
+    } catch (err) {
+        console.error("Erro ao carregar produtos:", err);
+        const container = document.getElementById('produtos-container');
+        if (container) container.innerHTML = '<p class="text-danger">Erro ao carregar produtos.</p>';
+    }
 }
 
-// Executa ao carregar a página
+// NOVA FUNÇÃO: carregarCategorias()
+async function carregarCategorias() {
+    try {
+        const res = await fetch('api_categorias.php');
+        const categorias = await res.json();
+        const select = document.getElementById('select-categorias');
+        if (!select) return;
+
+        select.innerHTML = '<option value="">Categorias</option>';
+        categorias.forEach(cat => {
+            const opt = document.createElement('option');
+            opt.value = `categoria-${cat.slug}.html`;
+            opt.textContent = cat.nome;
+            select.appendChild(opt);
+        });
+    } catch (err) {
+        console.error("Erro ao carregar categorias:", err);
+    }
+}
+
+// Carregar ao abrir a página
 document.addEventListener('DOMContentLoaded', () => {
-    carregarCategorias();
-    console.log('carregarCategorias() executado');
+    carregarCategorias(); // ADICIONADO
+    const pagina = window.location.pathname.split('/').pop();
+
+    if (pagina === 'index.html') {
+        carregarProdutos({ destaque: 1 });
+    } else if (pagina === 'produtos.html') {
+        carregarProdutos();
+    } else if (pagina.startsWith('categoria-') || pagina.includes('.html')) {
+        const slug = pagina.replace('categoria-', '').replace('.html', '');
+        if (slug && slug !== 'index' && slug !== 'produtos') {
+            carregarProdutos({ categoria: slug });
+        }
+    }
 });
