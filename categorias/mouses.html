@@ -14,29 +14,34 @@
                 <h1>Init Store</h1>
                 <nav class="menu">
                     <ul>
-                        <a href="produtos.html">Produtos</a>
+                        <a href="../produtos.html">Produtos</a>
                         <select id="select-categorias" onchange="redirecionarCategoria(this.value)">
                             <option value="">Categorias</option>
                         </select>                    
-                        <a href="famosos.html">Mais Vendidos</a>
+                        <a href="../famosos.html">Mais Vendidos</a>
                     </ul>
                 </nav>
                 <form action="" method="get" target="_blank">
                     <input type="text" name="q" placeholder="Buscar Produto..." required>
                 </form>
                 <nav class="carrinho">
-                    <a href="carrinho.html">
+                    <a href="../carrinho.html">
                         <img src="../carrinho.png" alt="Meu Carrinho" style="width: 30px; height: 30px;">
                     </a>
                 </nav>
                 <nav class="conta">
-                    <a href="conta.html">
+                    <a href="../conta.html">
                         <img src="../user.png" alt="Minha Conta" style="width: 30px; height: 30px;">
                     </a>
                 </nav>
             </div>
         </div>
     </header>
+
+    <main class="container">
+      <h2 style="text-align:center; margin:40px 0; color:#173f5f;">Mouses</h2>
+      <div id="lista-produtos" class="produtos-grid"></div>
+    </main>
 
   <footer>
     <div class="container">
@@ -54,46 +59,5 @@
 
   <!-- Scripts -->
   <script src="../script.js"></script>
-  <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    // 1. Carrega o menu de categorias
-    carregarCategorias();
-
-    // 2. Pega o slug da URL (ex: teclados.html → teclados)
-    const slug = window.location.pathname.split('/').pop().replace('.html', '');
-
-    // 3. Busca produtos da categoria
-    fetch(`http://localhost:8000/api_produtos.php?categoria=${slug}`)
-      .then(r => r.json())
-      .then(data => {
-        const container = document.getElementById('lista-produtos');
-        if (!data.dados || data.dados.length === 0) {
-          container.innerHTML = '<p style="text-align:center; color:#666;">Nenhum produto encontrado nesta categoria.</p>';
-          return;
-        }
-
-        container.innerHTML = data.dados.map(p => `
-          <div class="notebook">
-            <div class="card-image">
-              <img src="${p.imagem_url || 'https://placehold.co/300x200'}" 
-                   alt="${p.nome}" 
-                   onerror="this.src='https://placehold.co/300x200?text=Sem+Imagem'">
-            </div>
-            <div class="card-content">
-              <h2 class="product-title">${p.nome}</h2>
-              <p class="product-price">R$ ${parseFloat(p.preco).toFixed(2).replace('.', ',')}</p>
-              <button class="add-to-cart-btn" onclick="adicionarAoCarrinho(${p.id})">
-                Adicionar ao Carrinho
-              </button>
-            </div>
-          </div>
-        `).join('');
-      })
-      .catch(err => {
-        console.error('Erro ao carregar produtos:', err);
-        document.getElementById('lista-produtos').innerHTML = '<p style="color:red;">Erro ao carregar produtos.</p>';
-      });
-  });
-</script>
 </body>
 </html>
