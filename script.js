@@ -1,4 +1,4 @@
-// script-novo.js — VERSÃO FINAL 100% LIMPA — 10/11/2025 21:25
+fetch('session.php').catch(() => {});
 async function carregarProdutos(filtro = {}) {
     let url = 'api_produtos.php';
     const params = new URLSearchParams(filtro);
@@ -56,7 +56,7 @@ async function carregarCategorias() {
 
         categorias.forEach(cat => {
             const opt = document.createElement('option');
-            opt.value = cat.slug.replace(/-/g, '_') + '.html';
+            opt.value = '/categorias/' + cat.slug.replace(/-/g, '_') + '.php';
             opt.textContent = cat.nome;
             select.appendChild(opt);
         });
@@ -70,22 +70,38 @@ function redirecionarCategoria(valor) {
 }
 
 async function adicionarAoCarrinho(id) {
-    await fetch('api_carrinho.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id, acao: 'add' })
-    });
-    atualizarContador();
-    alert("Produto adicionado ao carrinho!");
+    try {
+        const res = await fetch('api_carrinho.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id, acao: 'add' })
+        });
+        const data = await res.json();
+        if (data.sucesso) {
+            atualizarContador();
+            alert("Adicionado ao carrinho!");
+        } else {
+            alert("Erro ao adicionar. Tente novamente.");
+        }
+    } catch (err) {
+        console.error("Erro:", err);
+        alert("Erro de conexão.");
+    }
+
 }
 
-function atualizarContador() {
-    let carrinho = JSON.parse(localStorage.getItem('carrinho') || '[]');
-    const total = carrinho.reduce((s, i) => s + i.qtd, 0);
-    const badge = document.getElementById('contador-carrinho');
-    if (badge) {
-        badge.textContent = total;
-        badge.style.display = total > 0 ? 'inline' : 'none';
+async function atualizarContador() {
+    try {
+        const res = await fetch('api_carrinho.php');
+        const itens = await res.json();
+        const total = Array.isArray(itens) ? itens.reduce((s, i) => s + i.qtd, 0) : 0;
+        const badge = document.getElementById('contador-carrinho');
+        if (badge) {
+            badge.textContent = total;
+            badge.style.display = total > 0 ? 'inline' : 'none';
+        }
+    } catch (err) {
+        console.error("Erro ao atualizar contador:", err);
     }
 }
 
@@ -95,14 +111,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const pagina = location.pathname.split('/').pop().toLowerCase();
 
-    if (pagina === 'index.html' || pagina === '' || pagina === '/') {
+    // ACEITA .php e .html
+    if (pagina === 'index.php' || pagina === '' || pagina === '/') {
         carregarProdutos({ destaque: 1 });
     } 
-    else if (pagina === 'produtos.html') {
+    else if (pagina === 'produtos.php') {
         carregarProdutos();
     } 
-    else if (pagina.endsWith('.html') && !['index.html', 'produtos.html', 'famosos.html'].includes(pagina)) {
-        const slug = pagina.replace('.html', '').replace(/_/g, '-');
+    else if ((pagina.endsWith('.php') || pagina.endsWith('.html')) && 
+             !['index.php', 'produtos.php', 'famosos.php', 'famosospagina.php'].includes(pagina)) {
+        
+        // Remove .php ou .html e converte _ para -
+        const slug = pagina.replace(/\.php$|\.html$/, '').replace(/_/g, '-');
         carregarProdutos({ categoria: slug });
     }
 });

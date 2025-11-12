@@ -13,23 +13,23 @@
                 <h1>Init Store</h1>
                 <nav class="menu">
                     <ul>
-                        <a href="index.html">Inicio</a>
+                        <a href="index.php">Inicio</a>
                         <select id="select-categorias" onchange="redirecionarCategoria(this.value)">
                             <option value="">Carregando...</option>
                         </select>                    
-                        <a href="famosos.html">Mais Vendidos</a>
+                        <a href="famosospagina.php">Mais Vendidos</a>
                     </ul>
                 </nav>
-                <form action="buscar.html" method="get">
+                <form action="buscar.php" method="get">
                     <input type="text" name="q" placeholder="Buscar Produto..." required>
                 </form>
                 <nav class="carrinho">
-                    <a href="carrinho.html">
+                    <a href="carrinho.php">
                         <img src="carrinho.png" alt="Meu Carrinho" style="width: 30px; height: 30px;">
                     </a>
                 </nav>
                 <nav class="conta">
-                    <a href="conta.html">
+                    <a href="conta.php">
                         <img src="user.png" alt="Minha Conta" style="width: 30px; height: 30px;">
                     </a>
                 </nav>

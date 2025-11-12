@@ -14,21 +14,21 @@
                 <h1>Init Store</h1>
                 <nav class="menu">
                     <ul>
-                        <a href="index.html">Início</a>
-                        <a href="produtos.html">Produtos</a>
-                        <a href="famosos.html">Mais Vendidos</a>
+                        <a href="index.php">Início</a>
+                        <a href="produtos.php">Produtos</a>
+                        <a href="famosos.php">Mais Vendidos</a>
                     </ul>
                 </nav>
                 <form action="" method="get" target="_blank">
                     <input type="text" name="q" placeholder="Buscar Produto..." required>
                 </form>
                 <nav class="carrinho">
-                    <a href="carrinho.html">
+                    <a href="carrinho.php">
                         <img src="carrinho.png" alt="Meu Carrinho" style="width: 30px; height: 30px;">
                     </a>
                 </nav>
                 <nav class="conta">
-                    <a href="conta.html">
+                    <a href="conta.php">
                         <img src="user.png" alt="Minha Conta" style="width: 30px; height: 30px;">
                     </a>
                 </nav>
