@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once 'configDB.php';
+require_once '../configDB.php';
 
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');

@@ -4,10 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mais Vendidos - Init Store</title>
-  <link rel="icon" type="image/x-icon" href="icon.png">
-  <link rel="stylesheet" href="style.css">
-  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+  <link rel="icon" type="image/x-icon" href="/img/icon.png">
+  <link rel="stylesheet" href="/css/style.css">
   <style>
     .swiper { width: 100%; padding: 40px 0; }
     .swiper-slide { display: flex; justify-content: center; }
@@ -24,9 +22,9 @@
           <ul>
             <a href="index.php">Início</a>
             <a href="produtos.php">Produtos</a>
-            <select id="select-categorias" onchange="redirecionarCategoria(this.value)">
+            <!--<select id="select-categorias" onchange="redirecionarCategoria(this.value)">
               <option value="">Categorias</option>
-            </select>                    
+            </select> -->                   
             <a href="famosos.php">Mais Vendidos</a>
           </ul>
         </nav>
@@ -35,13 +33,13 @@
         </form>
         <nav class="carrinho">
           <a href="carrinho.php">
-            <img src="carrinho.png" alt="Carrinho" style="width: 30px;">
+            <img src="/img/carrinho.png" alt="Carrinho" style="width: 30px;">
             <span id="contador-carrinho" class="badge">0</span>
           </a>
         </nav>
         <nav class="conta">
           <a href="conta.php">
-            <img src="user.png" alt="Conta" style="width: 30px;">
+            <img src="img/user.png" alt="Conta" style="width: 30px;">
           </a>
         </nav>
       </div>
@@ -78,12 +76,12 @@
     </div>
   </footer>
 
-  <script src="script.js"></script>
+  <script src="js/script.js"></script>
   <script>
     async function carregarFamosos() {
       const lista = document.getElementById('famosos-lista');
       try {
-        const res = await fetch('famosos.php');
+        const res = await fetch('../famosos.php');
         const data = await res.json();
         if (!data.dados || data.dados.length === 0) {
           lista.innerHTML = '<div class="swiper-slide"><p>Nenhum produto em destaque no momento.</p></div>';

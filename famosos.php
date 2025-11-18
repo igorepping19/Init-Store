@@ -2,7 +2,7 @@
 // famosos.php - VERSÃO CORRIGIDA E FUNCIONAL (10/11/2025)
 
 header('Content-Type: application/json');
-require_once 'db.php';
+require_once '../configDB.php';
 
 try {
     // 1. Verifica se a coluna 'destaque' existe

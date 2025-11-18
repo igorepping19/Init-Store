@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Init Store</title>
-    <link rel="icon" type="image/png" href="icon.png">
-    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="/img/icon.png">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body>
@@ -17,9 +17,9 @@
                 <nav class="menu">
                     <ul>
                         <a href="produtos.php">Produtos</a>
-                        <select id="select-categorias" onchange="redirecionarCategoria(this.value)">
+                        <!--<select id="select-categorias" onchange="redirecionarCategoria(this.value)">
                             <option value="">Carregando...</option>
-                        </select>
+                        </select> -->
                         <a href="famosospagina.php">Mais Vendidos</a>
                     </ul>
                 </nav>
@@ -28,13 +28,13 @@
                 </form>
                 <nav class="carrinho">
                     <a href="carrinho.php">
-                        <img src="carrinho.png" alt="Meu Carrinho" style="width: 30px; height: 30px;">
+                        <img src="/img/carrinho.png" alt="Meu Carrinho" style="width: 30px; height: 30px;">
                         <span id="contador-carrinho" class="badge">0</span>
                     </a>
                 </nav>
                 <nav class="conta">
                     <a href="conta.php">
-                        <img src="user.png" alt="Minha Conta" style="width: 30px; height: 30px;">
+                        <img src="/img/user.png" alt="Minha Conta" style="width: 30px; height: 30px;">
                     </a>
                 </nav>
             </div>
@@ -49,7 +49,7 @@
                     <p>Encontre os melhores notebooks, desktops, periféricos e componentes com preços imbatíveis e
                         entrega rápida.</p>
                 </div>
-                <img src="desktop.jpg" alt="Imagem Desktop">
+                <img src="/img/desktop.jpg" alt="Imagem Desktop">
             </div>
 
             <div class="destaques">
@@ -76,11 +76,11 @@
     </footer>
 
     <!-- SCRIPT.JS COM CARRINHO E CATEGORIAS -->
-    <script src="script.js"></script>
+    <script src="/js/script.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            carregarCategorias();
+           // carregarCategorias();
             carregarProdutos({ destaque: 1 });
             atualizarContador();
         });

@@ -1,7 +1,7 @@
 // A URL onde o seu PHP de produtos está rodando
-const API_PRODUTOS_URL = 'http://localhost:8000/api_produtos.php'; 
+const API_PRODUTOS_URL = 'api/api_produtos.php'; 
 // A URL onde o seu PHP de carrinho está rodando (novo arquivo)
-const API_CARRINHO_URL = 'http://localhost:8000/api_carrinho.php'; 
+const API_CARRINHO_URL = 'api/api_carrinho.php'; 
 
 // ------------------------------------------------------------------
 // 1. CARREGAR PRODUTOS (Leitura)

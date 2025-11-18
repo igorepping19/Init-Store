@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minha Conta - Init Store</title>
-    <link rel="icon" type="image/x-icon" href="icon.png">
-    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="img/icon.png">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <header>
@@ -16,9 +16,9 @@
                     <ul>
                         <a href="index.php">Início</a>
                         <a href="produtos.php">Produtos</a>
-                        <select id="select-categorias" onchange="redirecionarCategoria(this.value)">
+                        <!--<select id="select-categorias" onchange="redirecionarCategoria(this.value)">
                             <option value="">Categorias</option>
-                        </select>
+                        </select>-->
                     </ul>
                 </nav>
                 <form action="" method="get" target="_blank">
@@ -26,12 +26,12 @@
                 </form>
                 <nav class="carrinho">
                     <a href="carrinho.php">
-                        <img src="carrinho.png" alt="Meu Carrinho" style="width: 30px; height: 30px;">
+                        <img src="img/carrinho.png" alt="Meu Carrinho" style="width: 30px; height: 30px;">
                     </a>
                 </nav>
                 <nav class="conta">
                     <a href="conta.php">
-                        <img src="user.png" alt="Minha Conta" style="width: 30px; height: 30px;">
+                        <img src="img/user.png" alt="Minha Conta" style="width: 30px; height: 30px;">
                     </a>
                 </nav>
             </div>
@@ -98,7 +98,7 @@
         </div>
     </footer>
     
-    <script src="teste.js"></script> <!-- Mantém o contador do carrinho -->
-    <script src="conta.js"></script>
+    <script src="js/teste.js"></script> <!-- Mantém o contador do carrinho -->
+    <script src="js/conta.js"></script>
 </body>
 </html>

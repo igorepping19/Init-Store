@@ -1,5 +1,5 @@
 /* pedidos.js – checkout + integração com login */
-const API_PEDIDOS_URL = 'http://localhost:8000/api_pedidos.php';
+const API_PEDIDOS_URL = '/api/api_pedidos.php';
 const AUTH_KEY = 'init_store_user_auth';   // mesma chave usada em conta.js
 
 /* -------------------------------------------------
@@ -9,7 +9,7 @@ function preencherUserId() {
     const auth = localStorage.getItem(AUTH_KEY);
     if (!auth) {
         mostrarMensagem('Você precisa estar logado para finalizar a compra.', 'erro');
-        setTimeout(() => location.href = 'conta.html', 2000);
+        setTimeout(() => location.href = 'conta.php', 2000);
         return false;
     }
 
@@ -19,7 +19,7 @@ function preencherUserId() {
 
     if (!user || !user.id) {
         mostrarMensagem('Sessão inválida. Faça login novamente.', 'erro');
-        setTimeout(() => location.href = 'conta.html', 2000);
+        setTimeout(() => location.href = 'conta.php', 2000);
         return false;
     }
 
@@ -75,7 +75,7 @@ document.getElementById('checkout-form').addEventListener('submit', async (e) =>
         if (res.ok && result.status === 'sucesso') {
             mostrarMensagem(`Pedido #${result.pedido_id} criado com sucesso!`, 'sucesso');
             localStorage.removeItem(AUTH_KEY);           // opcional: logout após compra
-            setTimeout(() => location.href = 'obrigado.html', 2000);
+            setTimeout(() => location.href = 'index.php', 2000);
         } else {
             mostrarMensagem(result.mensagem || 'Erro ao finalizar.', 'erro');
         }

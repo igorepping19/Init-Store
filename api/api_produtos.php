@@ -3,7 +3,7 @@
 header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 
-require_once 'db.php';
+require_once '../configDB.php';
 
 $where = " WHERE 1=1";
 $params = [];
@@ -13,8 +13,8 @@ if (isset($_GET['destaque']) && $_GET['destaque'] == 1) {
 }
 
 if (isset($_GET['categoria'])) {
-    $slug = $_GET['categoria'];
-    // Primeiro, busca o ID da categoria pelo slug
+    $slug = trim($_GET['categoria']);
+    // Busca o ID da categoria pelo slug
     $stmt = $pdo->prepare("SELECT id FROM categorias WHERE slug = ?");
     $stmt->execute([$slug]);
     $cat = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -23,7 +23,6 @@ if (isset($_GET['categoria'])) {
         echo json_encode(['dados' => []]);
         exit;
     }
-
     $where .= " AND p.categoria_id = ?";
     $params[] = $cat['id'];
 }
@@ -33,7 +32,7 @@ $sql = "SELECT
             p.nome, 
             p.preco, 
             p.imagem_url, 
-            c.slug AS categoria_slug, 
+            c.slug AS categoria_slug,
             p.destaque
         FROM produtos p
         JOIN categorias c ON p.categoria_id = c.id

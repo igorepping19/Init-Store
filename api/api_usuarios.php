@@ -1,6 +1,6 @@
 <?php
 // 1. Inclui o arquivo de conexão e as configurações básicas
-require_once 'configDB.php';
+require_once '../configDB.php';
 
 // Define o cabeçalho para indicar que a resposta será JSON
 header('Content-Type: application/json');

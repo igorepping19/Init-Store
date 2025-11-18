@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout - Init Store</title>
-    <link rel="icon" type="icon" href="icon.png">
-    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="icon" href="/img/icon.png">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
     <header>
@@ -24,12 +24,12 @@
                 </form>
                 <nav class="carrinho">
                     <a href="carrinho.php">
-                        <img src="carrinho.png" alt="Meu Carrinho" style="width: 30px; height: 30px;">
+                        <img src="/img/carrinho.png" alt="Meu Carrinho" style="width: 30px; height: 30px;">
                     </a>
                 </nav>
                 <nav class="conta">
                     <a href="conta.php">
-                        <img src="user.png" alt="Minha Conta" style="width: 30px; height: 30px;">
+                        <img src="/img/user.png" alt="Minha Conta" style="width: 30px; height: 30px;">
                     </a>
                 </nav>
             </div>
@@ -55,7 +55,7 @@
                         <input type="text" id="nome" name="nome" placeholder="Seu nome completo" required>
                         
                         <label for="email">E-mail:</label>
-                        <input type="email" id="email" name="email" placeholder="Seu e-mail cadastrado" disabled>
+                        <input type="email" id="email" name="email" placeholder="Seu e-mail cadastrado" required>
                         
                         <label for="endereco">Endereço:</label>
                         <input type="text" id="endereco" name="endereco" placeholder="Rua, número e complemento" required>
@@ -123,7 +123,7 @@
             </div>
         </div>
     </footer>
-    <script src="carrinho.js"></script>
-    <script src="pedidos.js"></script> 
+    <script src="/js/carrinho.js"></script>
+    <script src="/js/pedidos.js"></script> 
 </body>
 </html>

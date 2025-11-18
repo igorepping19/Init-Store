@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Todos os Produtos - Init Store</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
     <header>
@@ -14,9 +14,9 @@
                 <nav class="menu">
                     <ul>
                         <a href="index.php">Inicio</a>
-                        <select id="select-categorias" onchange="redirecionarCategoria(this.value)">
+                        <!--<select id="select-categorias" onchange="redirecionarCategoria(this.value)">
                             <option value="">Carregando...</option>
-                        </select>                    
+                        </select>   -->                 
                         <a href="famosospagina.php">Mais Vendidos</a>
                     </ul>
                 </nav>
@@ -25,12 +25,12 @@
                 </form>
                 <nav class="carrinho">
                     <a href="carrinho.php">
-                        <img src="carrinho.png" alt="Meu Carrinho" style="width: 30px; height: 30px;">
+                        <img src="/img/carrinho.png" alt="Meu Carrinho" style="width: 30px; height: 30px;">
                     </a>
                 </nav>
                 <nav class="conta">
                     <a href="conta.php">
-                        <img src="user.png" alt="Minha Conta" style="width: 30px; height: 30px;">
+                        <img src="/img/user.png" alt="Minha Conta" style="width: 30px; height: 30px;">
                     </a>
                 </nav>
             </div>
@@ -65,7 +65,7 @@
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script src="/js/script.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             carregarCategorias();
@@ -73,7 +73,7 @@
         });
 
         function carregarTodosProdutos() {
-            const url = 'http://localhost:8000/api_produtos.php';
+            const url = '/api/api_produtos.php';
             fetch(url)
                 .then(r => r.json())
                 .then(data => {
@@ -113,7 +113,7 @@
                 return;
             }
 
-            fetch(`http://localhost:8000/api_produtos.php`)
+            fetch(`/api/api_produtos.php`)
                 .then(r => r.json())
                 .then(data => {
                     const filtrados = data.dados.filter(p => 

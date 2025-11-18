@@ -1,6 +1,6 @@
 fetch('session.php').catch(() => {});
 async function carregarProdutos(filtro = {}) {
-    let url = 'api_produtos.php';
+    let url = 'api/api_produtos.php';
     const params = new URLSearchParams(filtro);
     if (params.toString()) url += '?' + params;
 
@@ -43,7 +43,7 @@ async function carregarProdutos(filtro = {}) {
     }
 }
 
-async function carregarCategorias() {
+/*async function carregarCategorias() {
     const select = document.getElementById('select-categorias');
     if (!select) return;
 
@@ -63,7 +63,7 @@ async function carregarCategorias() {
     } catch (err) {
         console.error("Erro categorias:", err);
     }
-}
+} */
 
 function redirecionarCategoria(valor) {
     if (valor) location.href = valor;
@@ -71,34 +71,42 @@ function redirecionarCategoria(valor) {
 
 async function adicionarAoCarrinho(id) {
     try {
-        const res = await fetch('api_carrinho.php', {
+        const res = await fetch('api/api_carrinho.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ id, acao: 'add' })
         });
         const data = await res.json();
-        if (data.sucesso) {
+        
+        if (data.status === 'sucesso' || data.sucesso) {
             atualizarContador();
             alert("Adicionado ao carrinho!");
         } else {
-            alert("Erro ao adicionar. Tente novamente.");
+            alert("Erro ao adicionar: " + (data.mensagem || "Tente novamente."));
         }
     } catch (err) {
         console.error("Erro:", err);
         alert("Erro de conexão.");
     }
-
 }
 
 async function atualizarContador() {
     try {
-        const res = await fetch('api_carrinho.php');
-        const itens = await res.json();
-        const total = Array.isArray(itens) ? itens.reduce((s, i) => s + i.qtd, 0) : 0;
-        const badge = document.getElementById('contador-carrinho');
+        const res = await fetch('api/api_carrinho.php');
+        const data = await res.json();
+        
+        // Agora funciona com os dois formatos (novo e antigo)
+        let total = 0;
+        if (data.carrinho) {
+            total = Object.values(data.carrinho).reduce((a, b) => a + b, 0);
+        } else if (Array.isArray(data)) {
+            total = data.reduce((s, i) => s + (i.qtd || 0), 0);
+        }
+
+        const badge = document.getElementById('contador-carrinho') || document.getElementById('carrinho-contador');
         if (badge) {
             badge.textContent = total;
-            badge.style.display = total > 0 ? 'inline' : 'none';
+            badge.style.display = total > 0 ? 'flex' : 'none';
         }
     } catch (err) {
         console.error("Erro ao atualizar contador:", err);
@@ -106,23 +114,34 @@ async function atualizarContador() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    carregarCategorias();
+    //carregarCategorias();
     atualizarContador();
 
-    const pagina = location.pathname.split('/').pop().toLowerCase();
+    const pagina = location.pathname.toLowerCase();
 
-    // ACEITA .php e .html
-    if (pagina === 'index.php' || pagina === '' || pagina === '/') {
+    // 1. Página inicial → produtos em destaque
+    if (pagina.endsWith('index.php') || pagina === '/' || pagina.endsWith('init-store/')) {
         carregarProdutos({ destaque: 1 });
-    } 
-    else if (pagina === 'produtos.php') {
-        carregarProdutos();
-    } 
-    else if ((pagina.endsWith('.php') || pagina.endsWith('.html')) && 
-             !['index.php', 'produtos.php', 'famosos.php', 'famosospagina.php'].includes(pagina)) {
-        
-        // Remove .php ou .html e converte _ para -
-        const slug = pagina.replace(/\.php$|\.html$/, '').replace(/_/g, '-');
-        carregarProdutos({ categoria: slug });
+        return;
     }
-});
+
+    // 2. Página de todos os produtos
+    if (pagina.endsWith('produtos.php')) {
+        carregarProdutos();
+        return;
+    }
+
+    // 3. Páginas de categoria: /categorias/ssd.php, /categorias/monitores.php, etc.
+    if (pagina.includes('/categorias/')) {
+        let slug = pagina.split('/').pop();           // pega "ssd.php"
+        slug = slug.replace(/\.php$|\.html$/i, '');    // remove .php ou .html
+        slug = slug.replace(/_/g, '-');                // _ vira -
+        slug = slug.trim();
+
+        if (slug && slug !== 'categorias') {
+            console.log("Categoria carregada via script.js:", slug);
+            carregarProdutos({ categoria: slug });
+        }
+        return;
+    }
+}); 

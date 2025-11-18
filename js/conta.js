@@ -1,5 +1,5 @@
 // URL da API de Usuários. Use a mesma porta do seu servidor PHP.
-const API_USUARIOS_URL = 'http://localhost:8000/api_usuarios.php';
+const API_USUARIOS_URL = 'api/api_usuarios.php';
 
 // Chave para armazenar o token de autenticação ou ID do usuário no localStorage
 const AUTH_KEY = 'init_store_user_auth';
@@ -83,7 +83,7 @@ async function handleLogin() {
             
             // Redireciona para a página principal ou para o checkout
             setTimeout(() => {
-                window.location.href = 'index.html'; 
+                window.location.href = 'index.php'; 
             }, 1000);
 
         } else {
@@ -165,7 +165,7 @@ function logout() {
     // Adicione aqui qualquer outra limpeza de sessão necessária
     showStatusMessage('Sessão encerrada com sucesso.', 'sucesso');
     setTimeout(() => {
-        window.location.href = 'index.html'; 
+        window.location.href = 'index.php'; 
     }, 1000);
 }
 
