@@ -28,13 +28,13 @@
                 </form>
                 <nav class="carrinho">
                     <a href="carrinho.php">
-                        <img src="/img/carrinho.png" alt="Meu Carrinho" style="width: 30px; height: 30px;">
+                        <img src="/img/carrinho.png" alt="Meu Carrinho">
                         <span id="contador-carrinho" class="badge">0</span>
                     </a>
                 </nav>
                 <nav class="conta">
                     <a href="conta.php">
-                        <img src="/img/user.png" alt="Minha Conta" style="width: 30px; height: 30px;">
+                        <img src="/img/user.png" alt="Minha Conta">
                     </a>
                 </nav>
             </div>

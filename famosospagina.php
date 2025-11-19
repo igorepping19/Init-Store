@@ -6,12 +6,6 @@
   <title>Mais Vendidos - Init Store</title>
   <link rel="icon" type="image/x-icon" href="/img/icon.png">
   <link rel="stylesheet" href="/css/style.css">
-  <style>
-    .swiper { width: 100%; padding: 40px 0; }
-    .swiper-slide { display: flex; justify-content: center; }
-    .notebook { width: 300px !important; }
-    .swiper-pagination-bullet-active { background: #173f5f; }
-  </style>
 </head>
 <body>
   <header>
@@ -20,26 +14,18 @@
         <h1>Init Store</h1>
         <nav class="menu">
           <ul>
-            <a href="index.php">Início</a>
-            <a href="produtos.php">Produtos</a>
-            <!--<select id="select-categorias" onchange="redirecionarCategoria(this.value)">
-              <option value="">Categorias</option>
-            </select> -->                   
-            <a href="famosos.php">Mais Vendidos</a>
+            <a href="/index.php">Início</a>
+            <a href="/produtos.php">Produtos</a>
+            <a href="/famosospagina.php">Mais Vendidos</a>
           </ul>
         </nav>
-        <form action="buscar.php" method="get">
+        <form action="/buscar.php" method="get">
           <input type="text" name="q" placeholder="Buscar Produto..." required>
         </form>
         <nav class="carrinho">
-          <a href="carrinho.php">
-            <img src="/img/carrinho.png" alt="Carrinho" style="width: 30px;">
+          <a href="/carrinho.php">
+            <img src="/img/carrinho.png" alt="Carrinho">
             <span id="contador-carrinho" class="badge">0</span>
-          </a>
-        </nav>
-        <nav class="conta">
-          <a href="conta.php">
-            <img src="img/user.png" alt="Conta" style="width: 30px;">
           </a>
         </nav>
       </div>
@@ -47,18 +33,13 @@
   </header>
 
   <main class="container">
-    <h2 style="margin: 40px 0 20px; font-size: 2.2em; color: #173f5f; text-align: center;">
-      Mais Vendidos da Init Store
-    </h2>
-    <p style="text-align: center; color: #666; margin-bottom: 40px;">
-      Os produtos que todo mundo está levando!
-    </p>
+    <section class="secao-titulo">
+      <h2>Mais Vendidos da Init Store</h2>
+      <p>Os produtos que todo mundo está levando!</p>
+    </section>
 
-    <div class="swiper">
-      <div class="swiper-wrapper" id="famosos-lista">
-        <div class="swiper-slide"><p>Carregando os mais vendidos...</p></div>
-      </div>
-      <div class="swiper-pagination"></div>
+    <div id="famosos-lista" class="grid-produtos">
+      <p class="mensagem-carregando">Carregando os mais vendidos...</p>
     </div>
   </main>
 
@@ -67,7 +48,7 @@
       <div class="rodape">
         <div class="contatos">
           <h4>Entre em Contato</h4>
-          <p>Email: initstore@gmail.com</p>
+          <p>Email: intstore@gmail.com</p>
         </div>
         <div class="direitos">
           <p>© 2025 Igor Epping. Todos os direitos reservados.</p>
@@ -78,51 +59,42 @@
 
   <script src="js/script.js"></script>
   <script>
-    async function carregarFamosos() {
-      const lista = document.getElementById('famosos-lista');
-      try {
-        const res = await fetch('../famosos.php');
-        const data = await res.json();
-        if (!data.dados || data.dados.length === 0) {
-          lista.innerHTML = '<div class="swiper-slide"><p>Nenhum produto em destaque no momento.</p></div>';
-          return;
-        }
+    document.addEventListener('DOMContentLoaded', () => {
+      const container = document.getElementById('famosos-lista');
+      
+      fetch('api/api_produtos.php?destaque')
+        .then(r => r.json())
+        .then(res => {
+          const produtos = res.dados || [];
+          
+          if (produtos.length === 0) {
+            container.innerHTML = '<p class="mensagem-vazio">Nenhum produto em destaque no momento.</p>';
+            return;
+          }
 
-        lista.innerHTML = data.dados.map(p => `
-          <div class="swiper-slide">
-            <div class="notebook">
-              <div class="card-image">
-                <img src="${p.imagem_url}" alt="${p.nome}" onerror="this.src='https://placehold.co/300x200?text=Sem+Imagem'">
+          container.innerHTML = produtos.map(p => `
+            <div class="produto-card">
+              <div class="produto-imagem">
+                <img src="${p.imagem_url || 'https://placehold.co/300x200'}" 
+                     alt="${p.nome}" 
+                     onerror="this.src='https://placehold.co/300x200?text=Sem+Imagem'">
               </div>
-              <div class="card-content">
-                <h2 class="product-title">${p.nome}</h2>
-                <p class="product-price">R$ ${parseFloat(p.preco).toFixed(2).replace('.', ',')}</p>
-                <button class="add-to-cart-btn" onclick="adicionarAoCarrinho(${p.id})">
+              <div class="produto-info">
+                <h3 class="produto-nome">${p.nome}</h3>
+                <p class="produto-preco">R$ ${parseFloat(p.preco).toFixed(2).replace('.', ',')}</p>
+                <button class="btn-add-carrinho" onclick="adicionarAoCarrinho(${p.id})">
                   Adicionar ao Carrinho
                 </button>
               </div>
             </div>
-          </div>
-        `).join('');
-
-        new Swiper('.swiper', {
-          loop: true,
-          autoplay: { delay: 4000 },
-          pagination: { el: '.swiper-pagination', clickable: true },
-          breakpoints: {
-            640: { slidesPerView: 1 },
-            768: { slidesPerView: 2 },
-            1024: { slidesPerView: 3 },
-            1200: { slidesPerView: 4 }
-          }
+          `).join('');
+        })
+        .catch(() => {
+          container.innerHTML = '<p class="mensagem-erro">Erro ao carregar produtos.</p>';
         });
 
-      } catch (err) {
-        lista.innerHTML = '<div class="swiper-slide"><p style="color:red;">Erro ao carregar produtos.</p></div>';
-      }
-    }
-
-    document.addEventListener('DOMContentLoaded', carregarFamosos);
+      if (typeof atualizarContador === 'function') atualizarContador();
+    });
   </script>
 </body>
 </html>

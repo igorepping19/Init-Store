@@ -144,4 +144,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         return;
     }
+        // PÁGINA DOS MAIS VENDIDOS
+    if (pagina.includes('famosospagina.php') || pagina.includes('famosos.php')) {
+        carregarProdutos({ destaque: 1 });
+        return;
+    }
 }); 
