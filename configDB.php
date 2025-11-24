@@ -1,21 +1,20 @@
 <?php
-$host = 'localhost';
-$port = '3306';
-$dbname = 'initstore_db';  // ← AQUI!
-$user = 'root';
-$pass = ''; // ou sua senha
+// Funciona no PC (SQLite) e na InfinityFree (MySQL) automaticamente
 
-$dsn = "mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4";
+if (file_exists(__DIR__ . '/initStore_db')) {
+    // === LOCAL: usa o arquivo SQLite do seu PC ===
+    $db = new PDO("sqlite:" . __DIR__ . "/initStore_db");
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+} else {
+    // === ONLINE: usa MySQL da InfinityFree ===
+    $host   = 'sql100.infinityfree.com';
+    $dbname = 'if0_40161533_initstore_db';   // ← TEM que ser esse nome EXATO
+    $user   = 'if0_40161533';
+    $pass   = 'Iogriago18';
 
-$options = [
-    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    PDO::ATTR_EMULATE_PREPARES   => false,
-];
-
-try {
-    $pdo = new PDO($dsn, $user, $pass, $options);
-} catch (PDOException $e) {
-    die("Erro na conexão: " . $e->getMessage());
+    $db = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $user, $pass);
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 }
 ?>
