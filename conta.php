@@ -6,9 +6,9 @@
     <title>Minha Conta - Init Store</title>
     <link rel="stylesheet" href="/css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
-
     <header>
         <div class="container">
             <div class="cabecalho">
@@ -44,55 +44,42 @@
             <p>Faça login ou crie sua conta para começar a comprar com os melhores preços!</p>
         </section>
 
-        <!-- BOTÕES PARA TROCAR ENTRE LOGIN E CADASTRO -->
         <div class="toggle-buttons">
             <button class="toggle-btn active" onclick="mostrarLogin()">Login</button>
             <button class="toggle-btn" onclick="mostrarCadastro()">Cadastre-se</button>
         </div>
 
-        <!-- CONTAINER DOS FORMULÁRIOS -->
         <div class="form-container">
-
-            <!-- FORMULÁRIO DE LOGIN -->
+            <!-- LOGIN -->
             <div id="login-form" class="form-box active">
                 <h3>Bem-vindo de volta!</h3>
-                <form id="form-login" action="/api/login.php" method="POST">
-                    <div class="form-group">
-                        <label>Email</label>
-                        <input type="email" name="email" placeholder="seu@email.com" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Senha</label>
-                        <input type="password" name="senha" placeholder="••••••••" required>
-                    </div>
-                    <button type="submit" class="btn-principal">Entrar na Conta</button>
-                    <p class="link-extra"><a href="#">Esqueceu a senha?</a></p>
-                </form>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="login-email" placeholder="seu@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Senha</label>
+                    <input type="password" id="login-senha" placeholder="••••••••" required>
+                </div>
+                <button type="button" onclick="fazerLogin()" class="btn-principal">Entrar na Conta</button>
             </div>
 
-            <!-- FORMULÁRIO DE CADASTRO -->
+            <!-- CADASTRO -->
             <div id="cadastro-form" class="form-box">
                 <h3>Crie sua conta grátis</h3>
-                <form id="form-cadastro" action="/api/cadastro.php" method="POST">
-                    <div class="form-group">
-                        <label>Nome completo</label>
-                        <input type="text" name="nome" placeholder="João Silva" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Email</label>
-                        <input type="email" name="email" placeholder="joao@email.com" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Senha</label>
-                        <input type="password" name="senha" placeholder="Mínimo 6 caracteres" required minlength="6">
-                    </div>
-                    <div class="form-group">
-                        <label>Confirme a senha</label>
-                        <input type="password" name="senha2" placeholder="Digite novamente" required>
-                    </div>
-                    <button type="submit" class="btn-principal">Criar Minha Conta</button>
-                    <p class="termos">Ao criar a conta, você aceita nossos <a href="#">Termos de Uso</a>.</p>
-                </form>
+                <div class="form-group">
+                    <label>Nome completo</label>
+                    <input type="text" id="cad-nome" placeholder="João Silva" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="cad-email" placeholder="joao@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Senha</label>
+                    <input type="password" id="cad-senha" placeholder="Mínimo 6 caracteres" required minlength="6">
+                </div>
+                <button type="button" onclick="fazerCadastro()" class="btn-principal">Criar Minha Conta</button>
             </div>
         </div>
     </main>
@@ -113,19 +100,12 @@
 
     <script src="/js/script.js"></script>
     <script>
-        // Atualiza contador do carrinho
-        document.addEventListener('DOMContentLoaded', () => {
-            if (typeof atualizarContador === 'function') atualizarContador();
-        });
-
-        // Alternar entre Login e Cadastro
         function mostrarLogin() {
             document.getElementById('login-form').classList.add('active');
             document.getElementById('cadastro-form').classList.remove('active');
             document.querySelectorAll('.toggle-btn')[0].classList.add('active');
             document.querySelectorAll('.toggle-btn')[1].classList.remove('active');
         }
-
         function mostrarCadastro() {
             document.getElementById('cadastro-form').classList.add('active');
             document.getElementById('login-form').classList.remove('active');
@@ -133,41 +113,54 @@
             document.querySelectorAll('.toggle-btn')[0].classList.remove('active');
         }
 
-        // CADASTRO BEM-SUCEDIDO → VAI PRO LOGIN AUTOMATICAMENTE
-        const formCadastro = document.getElementById('form-cadastro');
-        formCadastro.addEventListener('submit', function(e) {
-            // Aqui você pode adicionar validação extra se quiser
-            // Por enquanto, só redireciona pro login após o envio
-            setTimeout(() => {
-                alert('Cadastro realizado com sucesso! Agora faça login.');
-                mostrarLogin();
-            }, 500);
-        });
+        async function fazerCadastro() {
+            const nome = document.getElementById('cad-nome').value.trim();
+            const email = document.getElementById('cad-email').value.trim();
+            const senha = document.getElementById('cad-senha').value;
 
-        // LOGIN BEM-SUCEDIDO → REDIRECIONA PRO INDEX
-        const formLogin = document.getElementById('form-login');
-        formLogin.addEventListener('submit', function(e) {
-            // Se o seu backend retornar sucesso, ele vai redirecionar
-            // Mas como backup, caso o PHP não redirecione, fazemos aqui:
-            const originalAction = this.action;
-            e.preventDefault();
+            if (!nome || !email || !senha) return Swal.fire('Erro', 'Preencha todos os campos', 'error');
 
-            fetch(originalAction, {
+            const res = await fetch('api/api_usuarios.php', {
                 method: 'POST',
-                body: new FormData(this)
-            })
-            .then(r => r.json())
-            .then(res => {
-                if (res.sucesso || res.status === 'success') {
-                    alert('Login realizado com sucesso! Bem-vindo à Init Store!');
-                    window.location.href = 'index.php';
-                } else {
-                    alert(res.mensagem || 'Email ou senha incorretos.');
-                }
-            })
-            .catch(() => {
-                alert('Erro no servidor. Tente novamente.');
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'register', nome, email, senha })
             });
+            const data = await res.json();
+
+            if (data.status === 'sucesso') {
+                Swal.fire('Sucesso!', 'Cadastro realizado! Agora faça login.', 'success');
+                mostrarLogin();
+            } else {
+                Swal.fire('Erro', data.mensagem || 'Erro no cadastro', 'error');
+            }
+        }
+
+        async function fazerLogin() {
+            const email = document.getElementById('login-email').value.trim();
+            const senha = document.getElementById('login-senha').value;
+
+            if (!email || !senha) return Swal.fire('Erro', 'Preencha email e senha', 'error');
+
+            const res = await fetch('api/api_usuarios.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'login', email, senha })
+            });
+            const data = await res.json();
+
+            if (data.status === 'sucesso') {
+                localStorage.setItem('user', JSON.stringify(data.usuario));
+                Swal.fire('Sucesso!', 'Login realizado! Bem-vindo!', 'success').then(() => {
+                    window.location.href = 'index.php';
+                });
+            } else {
+                Swal.fire('Erro', data.mensagem || 'Email ou senha incorretos', 'error');
+            }
+        }
+
+        // Atualiza contador do carrinho
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof atualizarContador === 'function') atualizarContador();
         });
     </script>
 </body>
